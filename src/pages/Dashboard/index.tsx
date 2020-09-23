@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from 'react'
+import BounceLoader from 'react-spinners/BounceLoader'
 import { FiChevronRight } from 'react-icons/fi'
 
 import logoImg from '../../assets/logo.svg'
@@ -18,11 +19,17 @@ interface Repository {
 const Dashboard: React.FC = () => {
   const [repo, setRepo] = useState('')
   const [repositories, setRepositories] = useState<Repository[]>([])
+  const [isSearching, setIsSearching] = useState(false)
 
   async function handleFindRepositories(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
+    setIsSearching(true)
+    setRepositories([])
+
     const { data } = await api.get(`/search/repositories?q=${repo}&per_page=10&sort=stargazers_count`)
+
+    setIsSearching(false)
     setRepositories([...data.items])
   }
 
@@ -47,6 +54,13 @@ const Dashboard: React.FC = () => {
       </Form>
 
       <Repositories>
+        <BounceLoader
+          loading={isSearching}
+          color="#04D361"
+          size={80}
+          css="margin: auto"
+        />
+
         {repositories.map((repository) => (
           <a key={repository.full_name} href="/">
             <img src={repository.owner.avatar_url} alt={repository.owner.login} />
