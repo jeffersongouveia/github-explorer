@@ -22,6 +22,12 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -42,7 +48,9 @@
     ],
     "import/prefer-default-export": "off",
     "no-use-before-define": "off",
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "camelcase": "off",
+    "no-console": "off"
   },
   "settings": {
     "import/resolver": {
