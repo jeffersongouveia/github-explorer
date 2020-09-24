@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch, Link } from 'react-router-dom'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/all'
+import ContentLoader from 'react-content-loader'
 
 import { Header, RepositoryInfo, Issues } from './styles'
 import api from '../../services/api'
@@ -66,35 +67,74 @@ const Repository: React.FC = () => {
         </Link>
       </Header>
 
-      {repository && (
-        <RepositoryInfo>
-          <header>
-            <img src={repository.owner.avatar_url} alt={repository.owner.login} />
+      <RepositoryInfo>
+        {repository
+          ? (
+            <>
+              <header>
+                <img src={repository.owner.avatar_url} alt={repository.owner.login} />
 
-            <div>
-              <strong>{repository.full_name}</strong>
-              <p>{repository.description}</p>
-            </div>
-          </header>
+                <div>
+                  <strong>{repository.full_name}</strong>
+                  <p>{repository.description}</p>
+                </div>
+              </header>
 
-          <ul>
-            <li>
-              <strong>{repository.stargazers_count}</strong>
-              <span>Estrelas</span>
-            </li>
-            <li>
-              <strong>{repository.forks_count}</strong>
-              <span>Forks</span>
-            </li>
-            <li>
-              <strong>{repository.open_issues_count}</strong>
-              <span>Issues abertas</span>
-            </li>
-          </ul>
-        </RepositoryInfo>
-      )}
+              <ul>
+                <li>
+                  <strong>{repository.stargazers_count}</strong>
+                  <span>Estrelas</span>
+                </li>
+                <li>
+                  <strong>{repository.forks_count}</strong>
+                  <span>Forks</span>
+                </li>
+                <li>
+                  <strong>{repository.open_issues_count}</strong>
+                  <span>Issues abertas</span>
+                </li>
+              </ul>
+            </>
+          )
+          : (
+            <ContentLoader
+              speed={2}
+              width={400}
+              height={220}
+              viewBox="0 0 400 220"
+              backgroundColor="#A8A8B3"
+              foregroundColor="#ECEBEB"
+            >
+              <rect x="131" y="14" rx="3" ry="3" width="169" height="12" />
+              <rect x="131" y="44" rx="3" ry="3" width="297" height="27" />
+              <circle cx="62" cy="54" r="50" />
+              <rect x="26" y="144" rx="0" ry="0" width="48" height="28" />
+              <rect x="26" y="184" rx="0" ry="0" width="68" height="8" />
+              <rect x="117" y="143" rx="0" ry="0" width="48" height="28" />
+              <rect x="117" y="183" rx="0" ry="0" width="68" height="8" />
+              <rect x="206" y="143" rx="0" ry="0" width="48" height="28" />
+              <rect x="206" y="183" rx="0" ry="0" width="68" height="8" />
+            </ContentLoader>
+          )}
+      </RepositoryInfo>
 
       <Issues>
+        {issues.length === 0 && (
+          <ContentLoader
+            speed={2}
+            width={500}
+            height={350}
+            viewBox="0 0 500 350"
+            backgroundColor="#A8A8B3"
+            foregroundColor="#ECEBEB"
+          >
+            <rect x="10" y="9" rx="0" ry="0" width="100%" height="68" />
+            <rect x="10" y="96" rx="0" ry="0" width="100%" height="68" />
+            <rect x="10" y="183" rx="0" ry="0" width="100%" height="68" />
+            <rect x="10" y="270" rx="0" ry="0" width="100%" height="68" />
+          </ContentLoader>
+        )}
+
         {issues.map((issue) => (
           <a key={issue.id} href={issue.html_url} target="_blank" rel="noopener noreferrer">
             <img src={issue.user.avatar_url} alt={issue.user.login} />

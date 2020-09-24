@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
     setIsSearching(true)
     setRepositories([])
 
-    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&per_page=10&sort=stargazers_count`)
+    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&per_page=10&sort=stars`)
 
     setHasMore(data.items.length > 0)
     setIsSearching(false)
@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
   async function handleLoadNextPage(): Promise<void> {
     setIsSearching(true)
 
-    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&page=${currentPage + 1}&per_page=10&sort=stargazers_count`)
+    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&page=${currentPage + 1}&per_page=10&sort=stars`)
 
     setIsSearching(false)
     setCurrentPage(currentPage + 1)
