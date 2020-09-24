@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { FiChevronRight } from 'react-icons/fi'
 import { PropagateLoader } from 'react-spinners'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -109,7 +110,7 @@ const Dashboard: React.FC = () => {
           )}
         >
           {repositories.map((repository) => (
-            <a key={repository.full_name} href="/">
+            <Link key={repository.full_name} to={`/repository/${repository.full_name}`}>
               <img src={repository.owner.avatar_url} alt={repository.owner.login} />
 
               <div>
@@ -118,7 +119,7 @@ const Dashboard: React.FC = () => {
               </div>
 
               <FiChevronRight size={20} />
-            </a>
+            </Link>
           ))}
         </InfiniteScroll>
       </Repositories>
