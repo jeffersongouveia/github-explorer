@@ -4,12 +4,12 @@ import { FiChevronRight } from 'react-icons/fi'
 import { PropagateLoader } from 'react-spinners'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-import logoImg from '../../assets/logo.svg'
-
 import {
   Title, Form, Error, Repositories, Search,
 } from './styles'
 import api from '../../services/api'
+
+import logoImg from '../../assets/logo.svg'
 
 interface Repository {
   full_name: string
