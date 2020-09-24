@@ -102,6 +102,12 @@ export const Issues = styled.div`
       transform: translateX(10px);
     }
     
+    img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+    }
+    
     div {
       flex: 1;
       margin: 0 16px;
