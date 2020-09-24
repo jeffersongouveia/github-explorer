@@ -1,4 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The base project was developed during [Rocketseat](https://rocketseat.com.br/) course **GoStack**.<br>
+You can access in [https://github-explorer-mu.vercel.app/](https://github-explorer-mu.vercel.app/).
+
+The project is simple, you can search repositories using Github public API.
 
 ## Available Scripts
 
