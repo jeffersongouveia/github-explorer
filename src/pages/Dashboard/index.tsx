@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, useEffect, FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { FiChevronRight } from 'react-icons/fi'
 import { PropagateLoader } from 'react-spinners'
@@ -26,18 +26,34 @@ interface Response {
 }
 
 const Dashboard: React.FC = () => {
-  const [repo, setRepo] = useState('')
-  const [repositories, setRepositories] = useState<Repository[]>([])
+  const [repositories, setRepositories] = useState<Repository[]>(() => {
+    const storageRepositories = sessionStorage.getItem('repositories') || ''
+    return JSON.parse(storageRepositories)
+  })
+
+  const [searchTerm, setSearchTerm] = useState(() => {
+    const storageSearchTerm = sessionStorage.getItem('search_term') || ''
+    return JSON.parse(storageSearchTerm)
+  })
+
   const [isSearching, setIsSearching] = useState(false)
   const [repoCount, setRepoCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [inputError, setInputError] = useState('')
 
+  useEffect(() => {
+    sessionStorage.setItem('repositories', JSON.stringify(repositories))
+  }, [repositories])
+
+  useEffect(() => {
+    sessionStorage.setItem('search_term', JSON.stringify(searchTerm))
+  }, [searchTerm])
+
   async function handleFindRepositories(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
-    if (!repo) {
+    if (!searchTerm) {
       setInputError('Desculpe, mas preciso de algum termo para pesquisar 🙂')
       return
     }
@@ -47,18 +63,18 @@ const Dashboard: React.FC = () => {
     setIsSearching(true)
     setRepositories([])
 
-    const { data } = await api.get<Response>(`/search/repositories?q=${repo}&per_page=10&sort=stargazers_count`)
+    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&per_page=10&sort=stargazers_count`)
 
     setHasMore(data.items.length > 0)
     setIsSearching(false)
-    setRepositories([...data.items])
     setRepoCount(data.total_count)
+    setRepositories([...data.items])
   }
 
   async function handleLoadNextPage(): Promise<void> {
     setIsSearching(true)
 
-    const { data } = await api.get<Response>(`/search/repositories?q=${repo}&page=${currentPage + 1}&per_page=10&sort=stargazers_count`)
+    const { data } = await api.get<Response>(`/search/repositories?q=${searchTerm}&page=${currentPage + 1}&per_page=10&sort=stargazers_count`)
 
     setIsSearching(false)
     setCurrentPage(currentPage + 1)
@@ -77,9 +93,9 @@ const Dashboard: React.FC = () => {
       <Form onSubmit={handleFindRepositories}>
         <Search hasError={!!inputError}>
           <input
-            value={repo}
+            value={searchTerm}
             placeholder="Digite o nome do repositório"
-            onChange={(e) => setRepo(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
 
           <button type="submit">
