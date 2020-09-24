@@ -3,6 +3,12 @@ You can access in [https://github-explorer-mu.vercel.app/](https://github-explor
 
 The project is simple, you can search repositories using Github public API.
 
+Features to implement:<br>
+- [x] A loading spinner during search
+- [ ] Infinite scroll
+- [ ] Internationalization
+- [ ] Dark mode
+
 ## Available Scripts
 
 In the project directory, you can run:
