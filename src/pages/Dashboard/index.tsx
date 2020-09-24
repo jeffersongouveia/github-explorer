@@ -5,7 +5,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 import logoImg from '../../assets/logo.svg'
 
-import { Title, Form, Repositories } from './styles'
+import {
+  Title, Form, Error, Repositories, Search,
+} from './styles'
 import api from '../../services/api'
 
 interface Repository {
@@ -29,10 +31,17 @@ const Dashboard: React.FC = () => {
   const [repoCount, setRepoCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const [inputError, setInputError] = useState('')
 
   async function handleFindRepositories(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
+    if (!repo) {
+      setInputError('Desculpe, mas preciso de algum termo para pesquisar 🙂')
+      return
+    }
+
+    setInputError('')
     setCurrentPage(1)
     setIsSearching(true)
     setRepositories([])
@@ -46,7 +55,6 @@ const Dashboard: React.FC = () => {
   }
 
   async function handleLoadNextPage(): Promise<void> {
-    console.count('loading more')
     setIsSearching(true)
 
     const { data } = await api.get<Response>(`/search/repositories?q=${repo}&page=${currentPage + 1}&per_page=10&sort=stargazers_count`)
@@ -66,15 +74,19 @@ const Dashboard: React.FC = () => {
       </Title>
 
       <Form onSubmit={handleFindRepositories}>
-        <input
-          value={repo}
-          placeholder="Digite o nome do repositório"
-          onChange={(e) => setRepo(e.target.value)}
-        />
+        <Search hasError={!!inputError}>
+          <input
+            value={repo}
+            placeholder="Digite o nome do repositório"
+            onChange={(e) => setRepo(e.target.value)}
+          />
 
-        <button type="submit">
-          Pesquisar
-        </button>
+          <button type="submit">
+            Pesquisar
+          </button>
+        </Search>
+
+        {inputError && <Error>{inputError}</Error>}
       </Form>
 
       <Repositories>

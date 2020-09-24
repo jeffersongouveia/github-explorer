@@ -5,7 +5,7 @@ The project is simple, you can search repositories using Github public API.
 
 Features to implement:<br>
 - [x] A loading spinner during search
-- [ ] Infinite scroll
+- [x] Infinite scroll
 - [ ] Internationalization
 - [ ] Dark mode
 
