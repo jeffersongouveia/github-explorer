@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react'
-import BounceLoader from 'react-spinners/BounceLoader'
 import { FiChevronRight } from 'react-icons/fi'
+import { PropagateLoader } from 'react-spinners'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import logoImg from '../../assets/logo.svg'
 
@@ -16,21 +17,44 @@ interface Repository {
   }
 }
 
+interface Response {
+  total_count: number
+  items: Repository[]
+}
+
 const Dashboard: React.FC = () => {
   const [repo, setRepo] = useState('')
   const [repositories, setRepositories] = useState<Repository[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [repoCount, setRepoCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
 
   async function handleFindRepositories(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
 
+    setCurrentPage(1)
     setIsSearching(true)
     setRepositories([])
 
-    const { data } = await api.get(`/search/repositories?q=${repo}&per_page=10&sort=stargazers_count`)
+    const { data } = await api.get<Response>(`/search/repositories?q=${repo}&per_page=10&sort=stargazers_count`)
 
+    setHasMore(data.items.length > 0)
     setIsSearching(false)
     setRepositories([...data.items])
+    setRepoCount(data.total_count)
+  }
+
+  async function handleLoadNextPage(): Promise<void> {
+    console.count('loading more')
+    setIsSearching(true)
+
+    const { data } = await api.get<Response>(`/search/repositories?q=${repo}&page=${currentPage + 1}&per_page=10&sort=stargazers_count`)
+
+    setIsSearching(false)
+    setCurrentPage(currentPage + 1)
+    setHasMore(data.items.length > 0)
+    setRepositories([...repositories, ...data.items])
   }
 
   return (
@@ -54,25 +78,37 @@ const Dashboard: React.FC = () => {
       </Form>
 
       <Repositories>
-        <BounceLoader
-          loading={isSearching}
-          color="#04D361"
-          size={80}
-          css="margin: auto"
-        />
+        <InfiniteScroll
+          next={handleLoadNextPage}
+          dataLength={repoCount}
+          hasMore={hasMore}
+          loader={(
+            <PropagateLoader
+              loading={isSearching}
+              color="#04D361"
+              size={15}
+              css="display: flex; justify-content: center; margin: 20px auto;"
+            />
+          )}
+          endMessage={(
+            <p style={{ textAlign: 'center' }}>
+              <b>That's all folks</b>
+            </p>
+          )}
+        >
+          {repositories.map((repository) => (
+            <a key={repository.full_name} href="/">
+              <img src={repository.owner.avatar_url} alt={repository.owner.login} />
 
-        {repositories.map((repository) => (
-          <a key={repository.full_name} href="/">
-            <img src={repository.owner.avatar_url} alt={repository.owner.login} />
+              <div>
+                <strong>{repository.full_name}</strong>
+                <p>{repository.description}</p>
+              </div>
 
-            <div>
-              <strong>{repository.full_name}</strong>
-              <p>{repository.description}</p>
-            </div>
-
-            <FiChevronRight size={20} />
-          </a>
-        ))}
+              <FiChevronRight size={20} />
+            </a>
+          ))}
+        </InfiniteScroll>
       </Repositories>
     </>
   )

@@ -50,7 +50,8 @@
     "no-use-before-define": "off",
     "semi": ["error", "never"],
     "camelcase": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "react/no-unescaped-entities": "off"
   },
   "settings": {
     "import/resolver": {
