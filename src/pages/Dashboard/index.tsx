@@ -27,12 +27,12 @@ interface Response {
 
 const Dashboard: React.FC = () => {
   const [repositories, setRepositories] = useState<Repository[]>(() => {
-    const storageRepositories = sessionStorage.getItem('repositories') || ''
+    const storageRepositories = sessionStorage.getItem('repositories') || '[]'
     return JSON.parse(storageRepositories)
   })
 
   const [searchTerm, setSearchTerm] = useState(() => {
-    const storageSearchTerm = sessionStorage.getItem('search_term') || ''
+    const storageSearchTerm = sessionStorage.getItem('search_term') || '""'
     return JSON.parse(storageSearchTerm)
   })
 
