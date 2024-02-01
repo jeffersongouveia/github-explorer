@@ -87,19 +87,19 @@ const Dashboard: React.FC = () => {
       <img src={logoImg} alt="github Explorer" />
 
       <Title>
-        Explore repositórios no Github
+        Explore repositories on Github
       </Title>
 
       <Form onSubmit={handleFindRepositories}>
         <Search hasError={!!inputError}>
           <input
             value={searchTerm}
-            placeholder="Digite o nome do repositório"
+            placeholder="Enter the repository name"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
           <button type="submit">
-            Pesquisar
+            Search
           </button>
         </Search>
 

@@ -52,6 +52,10 @@ const Repository: React.FC = () => {
     setIssues(data)
   }
 
+  function humanizeNumber(number: number): string {
+    return number.toLocaleString('en-US')
+  }
+
   useEffect(() => {
     getRepository()
     getIssues()
@@ -63,7 +67,7 @@ const Repository: React.FC = () => {
         <img src={logoImg} alt="Github Explorer" />
 
         <Link to="/">
-          <FiChevronLeft size={16} /> Voltar
+          <FiChevronLeft size={16} /> Back
         </Link>
       </Header>
 
@@ -82,16 +86,16 @@ const Repository: React.FC = () => {
 
               <ul>
                 <li>
-                  <strong>{repository.stargazers_count}</strong>
-                  <span>Estrelas</span>
+                  <strong>{humanizeNumber(repository.stargazers_count)}</strong>
+                  <span>Stars</span>
                 </li>
                 <li>
-                  <strong>{repository.forks_count}</strong>
+                  <strong>{humanizeNumber(repository.forks_count)}</strong>
                   <span>Forks</span>
                 </li>
                 <li>
-                  <strong>{repository.open_issues_count}</strong>
-                  <span>Issues abertas</span>
+                  <strong>{humanizeNumber(repository.open_issues_count)}</strong>
+                  <span>Open issues</span>
                 </li>
               </ul>
             </>
