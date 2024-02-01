@@ -25,7 +25,7 @@ interface Response {
   items: Repository[]
 }
 
-const Dashboard: React.FC = () => {
+function Dashboard(): React.JSX.Element {
   const [repositories, setRepositories] = useState<Repository[]>(() => {
     const storageRepositories = sessionStorage.getItem('repositories') || '[]'
     return JSON.parse(storageRepositories)
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
     event.preventDefault()
 
     if (!searchTerm) {
-      setInputError('Desculpe, mas preciso de algum termo para pesquisar 🙂')
+      setInputError('Sorry, but I need something to search 🙂')
       return
     }
 
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
         Explore repositories on Github
       </Title>
 
-      <Form onSubmit={handleFindRepositories}>
+      <Form onSubmit={(event) => handleFindRepositories(event)}>
         <Search hasError={!!inputError}>
           <input
             value={searchTerm}
@@ -108,7 +108,7 @@ const Dashboard: React.FC = () => {
 
       <Repositories>
         <InfiniteScroll
-          next={handleLoadNextPage}
+          next={() => handleLoadNextPage()}
           dataLength={repoCount}
           hasMore={hasMore}
           loader={(

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRouteMatch, Link } from 'react-router-dom'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/all'
 import ContentLoader from 'react-content-loader'
@@ -36,21 +36,21 @@ interface Issue {
   }
 }
 
-const Repository: React.FC = () => {
+function Repository(): React.JSX.Element {
   const { params } = useRouteMatch<RepositoryParams>()
 
   const [repository, setRepository] = useState<RepositoryProps | null>(null)
   const [issues, setIssues] = useState<Issue[]>([])
 
-  async function getRepository(): Promise<void> {
+  const getRepository = useCallback(async (): Promise<void> => {
     const { data } = await api.get(`repos/${params.repository}`)
     setRepository(data)
-  }
+  }, [params.repository])
 
-  async function getIssues(): Promise<void> {
+  const getIssues = useCallback(async (): Promise<void> => {
     const { data } = await api.get(`repos/${params.repository}/issues`)
     setIssues(data)
-  }
+  }, [params.repository])
 
   function humanizeNumber(number: number): string {
     return number.toLocaleString('en-US')
@@ -59,7 +59,7 @@ const Repository: React.FC = () => {
   useEffect(() => {
     getRepository()
     getIssues()
-  }, [params.repository])
+  }, [getRepository, getIssues])
 
   return (
     <>
